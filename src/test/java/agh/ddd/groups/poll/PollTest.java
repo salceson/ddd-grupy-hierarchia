@@ -1,11 +1,15 @@
 package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
+import agh.ddd.groups.poll.commands.FinishPollCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
+import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
+import agh.ddd.groups.poll.valueobjects.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +45,7 @@ public class PollTest {
     public void finishPollCommandShouldFinishPoll() throws Exception {
         fixture
                 .given(
-                        new PollCreatedEvent(pollId, pollContent, pollState)
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate)
                 )
                 .when(
                         new FinishPollCommand(pollId, userId)
@@ -55,7 +59,7 @@ public class PollTest {
     public void finishPollCommandShouldThrowExceptionIfPollWasAlreadyFinished() throws Exception {
         fixture
                 .given(
-                        new PollCreatedEvent(pollId, pollContent, pollState),
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
                 .when(
