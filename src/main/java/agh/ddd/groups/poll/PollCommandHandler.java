@@ -1,6 +1,7 @@
 package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
+import agh.ddd.groups.poll.commands.FinishPollCommand;
 import agh.ddd.groups.poll.valueobjects.PollState;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
@@ -27,4 +28,9 @@ public class PollCommandHandler {
         pollRepository.add(poll);
     }
 
+    @CommandHandler
+    public void handleFinishPollCommand(FinishPollCommand finishPollCommand) {
+        final Poll poll = pollRepository.load(finishPollCommand.getPollId());
+        poll.finishPoll(finishPollCommand.getUserId());
+    }
 }
