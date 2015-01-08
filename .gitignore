@@ -15,3 +15,8 @@ hs_err_pid*
 # IntelliJ project settings
 /.idea
 *.iml
+
+# Eclipse project settings
+.classpath
+.project
+.settings/
