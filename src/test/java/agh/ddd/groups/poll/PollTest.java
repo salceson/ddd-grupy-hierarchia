@@ -21,7 +21,7 @@ public class PollTest {
     private String pollContent = "Testowa ankieta";
     private PollState pollState = PollState.OPENED;
     private UserId userId = UserId.of(7L);
-    private DateTime pollDeadlineDate = DateTime.now();
+    private DateTime pollDeadlineDate = DateTime.now().plusDays(14);
     private UserId anotherUserId = UserId.of(5L);
 
     @Before

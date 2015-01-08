@@ -1,12 +1,11 @@
 package agh.ddd.groups.poll;
 
-import agh.ddd.groups.poll.events.MemberInterestedEvent;
-import agh.ddd.groups.poll.events.PollCreatedEvent;
-import agh.ddd.groups.poll.events.PollFinishedEvent;
-import agh.ddd.groups.poll.events.PollProlongedEvent;
+import agh.ddd.groups.poll.events.*;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
 import agh.ddd.groups.poll.valueobjects.UserId;
+import com.google.common.base.Preconditions;
+import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
@@ -29,6 +28,10 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     private Poll() {}
 
     public Poll(PollId pollId, String content, DateTime pollDeadlineDate){
+        Preconditions.checkNotNull(pollId);
+        Preconditions.checkNotNull(content);
+        Preconditions.checkNotNull(pollDeadlineDate);
+        Preconditions.checkArgument(!pollDeadlineDate.isBeforeNow());
         apply(new PollCreatedEvent(pollId, content, pollDeadlineDate));
     }
 
@@ -85,5 +88,13 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     @EventSourcingHandler
     public void onMemberInterested(MemberInterestedEvent event){
         userVotes.add(event.getUserId());
+    }
+
+    @EventHandler
+    public void onPollDeadlineReached(PollDeadlineReachedEvent event){
+        if(!pollId.equals(event.getPollId())){
+            return;
+        }
+        pollState = PollState.DEADLINE_PASSED;
     }
 }
