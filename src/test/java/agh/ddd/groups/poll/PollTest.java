@@ -22,7 +22,7 @@ public class PollTest {
     }
 
     @Test
-    public void createPollShouldCreateNewPoll(){
+    public void createPollCommandShouldCreateNewPoll(){
         fixture.given()
                 .when(
                         new CreatePollCommand(pollId, pollContent)
