@@ -1,6 +1,7 @@
 package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
+import agh.ddd.groups.poll.valueobjects.PollState;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class PollCommandHandler {
 
     @CommandHandler
     public void handleCreatePollCommand(CreatePollCommand createPollCommand){
-        Poll poll = PollFactory.create(createPollCommand.getPollId(), createPollCommand.getContent());
+        Poll poll = PollFactory.create(createPollCommand.getPollId(), createPollCommand.getContent(), PollState.OPENED);
         pollRepository.add(poll);
     }
 
