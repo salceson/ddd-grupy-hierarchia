@@ -18,7 +18,7 @@ public class PollTest {
     private FixtureConfiguration fixture;
 
     private PollId pollId = PollId.of(13L);
-    private String pollContent = "Testowa ankieta";
+    private String pollContent = "Test poll";
     private PollState pollState = PollState.OPENED;
     private UserId userId = UserId.of(7L);
     private DateTime pollDeadlineDate = DateTime.now().plusDays(14);
