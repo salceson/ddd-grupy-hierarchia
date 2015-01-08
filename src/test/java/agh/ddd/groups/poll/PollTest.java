@@ -26,8 +26,9 @@ public class PollTest {
         fixture.given()
                 .when(
                         new CreatePollCommand(pollId, pollContent)
-                ).expectEvents(
-                new PollCreatedEvent(pollId, pollContent)
-        );
+                )
+                .expectEvents(
+                        new PollCreatedEvent(pollId, pollContent)
+                );
     }
 }
