@@ -37,4 +37,8 @@ public class PollId {
                 "id=" + id +
                 '}';
     }
+
+    public static PollId of(long id){
+        return new PollId(id);
+    }
 }

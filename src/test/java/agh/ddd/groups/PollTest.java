@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class PollTest {
     private FixtureConfiguration fixture;
-    private PollId pollId = new PollId(13L);
+    private PollId pollId = PollId.of(13L);
     private String pollContent = "Testowa ankieta";
 
     @Before
