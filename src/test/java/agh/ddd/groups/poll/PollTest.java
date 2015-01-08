@@ -16,10 +16,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-/* TODO: Create proper configuration
-TODO: Tests for deadline saga
+//TODO: Tests for deadline saga
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:poll-test-context.xml"})*/
+@ContextConfiguration(locations = {"classpath:poll-test-context.xml"})
 public class PollTest {
     private FixtureConfiguration fixture;
 
