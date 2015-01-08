@@ -6,7 +6,6 @@ import agh.ddd.groups.poll.commands.ProlongPollCommand;
 import agh.ddd.groups.poll.commands.VoteIdeaCommand;
 import agh.ddd.groups.poll.events.*;
 import agh.ddd.groups.poll.valueobjects.PollId;
-import agh.ddd.groups.poll.valueobjects.PollState;
 import agh.ddd.groups.poll.valueobjects.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -19,7 +18,6 @@ public class PollTest {
 
     private PollId pollId = PollId.of(13L);
     private String pollContent = "Test poll";
-    private PollState pollState = PollState.OPENED;
     private UserId userId = UserId.of(7L);
     private DateTime pollDeadlineDate = DateTime.now().plusDays(14);
     private UserId anotherUserId = UserId.of(5L);
