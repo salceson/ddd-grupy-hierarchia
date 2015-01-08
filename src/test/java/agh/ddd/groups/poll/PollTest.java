@@ -2,8 +2,11 @@ package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
 import agh.ddd.groups.poll.commands.FinishPollCommand;
+import agh.ddd.groups.poll.commands.ProlongPollCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
+import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
+import agh.ddd.groups.poll.events.PollProlongedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
 import agh.ddd.groups.poll.valueobjects.UserId;
@@ -65,6 +68,42 @@ public class PollTest {
                 .when(
                         new FinishPollCommand(pollId, userId)
                 )
-                .expectException(IllegalStateException.class);
+                .expectException(
+                        IllegalStateException.class
+                );
+    }
+
+    @Test
+    public void prolongPollCommandShouldProlongPoll() throws Exception {
+        final DateTime newDeadlineDate = new DateTime().plusDays(1);
+
+        fixture
+                .given(
+                new PollCreatedEvent(pollId, pollContent, pollDeadlineDate),
+                new PollDeadlineReachedEvent(pollId)
+                )
+                .when(
+                        new ProlongPollCommand(pollId, userId, newDeadlineDate)
+                )
+                .expectEvents(
+                        new PollProlongedEvent(pollId, newDeadlineDate)
+                );
+    }
+
+    @Test
+    public void prolongPollCommandShouldThrowExceptionForPastDate() throws Exception {
+        final DateTime newDeadlineDate = new DateTime().minusHours(1);
+
+        fixture
+                .given(
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate),
+                        new PollDeadlineReachedEvent(pollId)
+                )
+                .when(
+                        new ProlongPollCommand(pollId, userId, newDeadlineDate)
+                )
+                .expectException(
+                        IllegalArgumentException.class
+                );
     }
 }

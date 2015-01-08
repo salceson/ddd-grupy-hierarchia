@@ -2,6 +2,7 @@ package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
 import agh.ddd.groups.poll.commands.FinishPollCommand;
+import agh.ddd.groups.poll.commands.ProlongPollCommand;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,11 @@ public class PollCommandHandler {
     public void handleFinishPollCommand(FinishPollCommand finishPollCommand) {
         final Poll poll = pollRepository.load(finishPollCommand.getPollId());
         poll.finishPoll(finishPollCommand.getUserId());
+    }
+
+    @CommandHandler
+    public void handleProlongPollCommand(ProlongPollCommand prolongPollCommand) {
+        final Poll poll = pollRepository.load(prolongPollCommand.getPollId());
+        poll.prolong(prolongPollCommand.getNewDeadlineDate(), prolongPollCommand.getUserId());
     }
 }

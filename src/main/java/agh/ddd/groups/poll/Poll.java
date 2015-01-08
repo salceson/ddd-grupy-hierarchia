@@ -2,6 +2,7 @@ package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.events.PollCreatedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
+import agh.ddd.groups.poll.events.PollProlongedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
 import agh.ddd.groups.poll.valueobjects.UserId;
@@ -20,10 +21,20 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     private PollState pollState;
     private DateTime pollDeadlineDate;
 
-    private Poll(){}
+    private Poll() {}
 
     public Poll(PollId pollId, String content, DateTime pollDeadlineDate){
         apply(new PollCreatedEvent(pollId, content, pollDeadlineDate));
+    }
+
+    public void prolong(DateTime newDeadlineDate, UserId userId) {
+        //TODO check user privileges here?
+
+        if(newDeadlineDate.isBeforeNow()) {
+            throw new IllegalArgumentException("Cannot prolong poll to past date!");
+        }
+
+        apply(new PollProlongedEvent(pollId, newDeadlineDate));
     }
 
     public void finishPoll(UserId userId) {
@@ -40,11 +51,16 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     }
 
     @EventSourcingHandler
-    public void onPollCreated(PollCreatedEvent event){
+    public void onPollCreated(PollCreatedEvent event) {
         pollId = event.getPollId();
         content = event.getContent();
         pollDeadlineDate = event.getPollDeadlineDate();
         pollState = PollState.OPENED;
+    }
+
+    @EventSourcingHandler
+    public void onPollProlonged(PollProlongedEvent event) {
+        pollDeadlineDate = event.getNewPollDeadlineDate();
     }
 
     @EventSourcingHandler
