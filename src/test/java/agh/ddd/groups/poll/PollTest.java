@@ -1,10 +1,10 @@
-package agh.ddd.groups;
+package agh.ddd.groups.poll;
 
-import agh.ddd.groups.commands.CreatePollCommand;
-import agh.ddd.groups.events.PollCreatedEvent;
-import agh.ddd.groups.valueobjects.PollId;
-import org.axonframework.test.Fixtures;
+import agh.ddd.groups.poll.commands.CreatePollCommand;
+import agh.ddd.groups.poll.events.PollCreatedEvent;
+import agh.ddd.groups.poll.valueobjects.PollId;
 import org.axonframework.test.FixtureConfiguration;
+import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 

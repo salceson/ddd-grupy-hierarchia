@@ -1,6 +1,6 @@
-package agh.ddd.groups;
+package agh.ddd.groups.poll;
 
-import agh.ddd.groups.valueobjects.PollId;
+import agh.ddd.groups.poll.valueobjects.PollId;
 
 /**
  * @author Michał Ciołczyk

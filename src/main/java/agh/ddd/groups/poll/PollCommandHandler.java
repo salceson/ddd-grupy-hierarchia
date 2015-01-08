@@ -1,6 +1,6 @@
-package agh.ddd.groups;
+package agh.ddd.groups.poll;
 
-import agh.ddd.groups.commands.CreatePollCommand;
+import agh.ddd.groups.poll.commands.CreatePollCommand;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;

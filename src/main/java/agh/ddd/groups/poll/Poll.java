@@ -1,7 +1,7 @@
-package agh.ddd.groups;
+package agh.ddd.groups.poll;
 
-import agh.ddd.groups.events.PollCreatedEvent;
-import agh.ddd.groups.valueobjects.PollId;
+import agh.ddd.groups.poll.events.PollCreatedEvent;
+import agh.ddd.groups.poll.valueobjects.PollId;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;

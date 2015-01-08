@@ -1,4 +1,4 @@
-package agh.ddd.groups.valueobjects;
+package agh.ddd.groups.poll.valueobjects;
 
 /**
  * @author Michał Ciołczyk

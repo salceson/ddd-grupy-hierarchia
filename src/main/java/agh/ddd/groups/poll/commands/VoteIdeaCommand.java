@@ -1,4 +1,4 @@
-package agh.ddd.groups.commands;
+package agh.ddd.groups.poll.commands;
 
 /**
  * @author Michał Ciołczyk

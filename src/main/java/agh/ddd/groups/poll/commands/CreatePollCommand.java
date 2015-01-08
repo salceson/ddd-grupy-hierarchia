@@ -1,6 +1,6 @@
-package agh.ddd.groups.commands;
+package agh.ddd.groups.poll.commands;
 
-import agh.ddd.groups.valueobjects.PollId;
+import agh.ddd.groups.poll.valueobjects.PollId;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 /**
