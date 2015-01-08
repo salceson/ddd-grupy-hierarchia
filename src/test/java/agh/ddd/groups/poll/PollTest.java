@@ -1,12 +1,9 @@
 package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
-import agh.ddd.groups.poll.commands.FinishPollCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
-import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
-import agh.ddd.groups.poll.valueobjects.UserId;
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
 import org.junit.Before;
@@ -19,6 +16,7 @@ public class PollTest {
     private String pollContent = "Testowa ankieta";
     private PollState pollState = PollState.OPENED;
     private UserId userId = UserId.of(7L);
+    private DateTime pollDeadlineDate = DateTime.now();
 
     @Before
     public void setUp() throws Exception {
@@ -32,10 +30,10 @@ public class PollTest {
     public void createPollCommandShouldCreateNewPoll(){
         fixture.given()
                 .when(
-                        new CreatePollCommand(pollId, pollContent)
+                        new CreatePollCommand(pollId, pollContent, pollDeadlineDate)
                 )
                 .expectEvents(
-                        new PollCreatedEvent(pollId, pollContent, pollState)
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate)
                 );
     }
 

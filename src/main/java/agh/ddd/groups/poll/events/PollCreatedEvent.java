@@ -1,7 +1,7 @@
 package agh.ddd.groups.poll.events;
 
 import agh.ddd.groups.poll.valueobjects.PollId;
-import agh.ddd.groups.poll.valueobjects.PollState;
+import org.joda.time.DateTime;
 
 /**
  * @author Michał Ciołczyk
@@ -9,12 +9,12 @@ import agh.ddd.groups.poll.valueobjects.PollState;
 public class PollCreatedEvent {
     private final PollId pollId;
     private final String content;
-    private final PollState pollState;
+    private final DateTime pollDeadlineDate;
 
-    public PollCreatedEvent(PollId pollId, String content, PollState pollState) {
+    public PollCreatedEvent(PollId pollId, String content, DateTime pollDeadlineDate) {
         this.pollId = pollId;
         this.content = content;
-        this.pollState = pollState;
+        this.pollDeadlineDate = pollDeadlineDate;
     }
 
     public PollId getPollId() {
@@ -25,7 +25,7 @@ public class PollCreatedEvent {
         return content;
     }
 
-    public PollState getPollState() {
-        return pollState;
+    public DateTime getPollDeadlineDate() {
+        return pollDeadlineDate;
     }
 }
