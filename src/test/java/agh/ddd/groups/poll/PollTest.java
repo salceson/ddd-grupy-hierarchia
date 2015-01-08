@@ -2,6 +2,8 @@ package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
 import agh.ddd.groups.poll.commands.FinishPollCommand;
+import agh.ddd.groups.poll.commands.VoteIdeaCommand;
+import agh.ddd.groups.poll.events.MemberInterestedEvent;
 import agh.ddd.groups.poll.commands.ProlongPollCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
 import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
@@ -24,6 +26,7 @@ public class PollTest {
     private PollState pollState = PollState.OPENED;
     private UserId userId = UserId.of(7L);
     private DateTime pollDeadlineDate = DateTime.now();
+    private UserId anotherUserId = UserId.of(5L);
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +37,7 @@ public class PollTest {
     }
 
     @Test
-    public void createPollCommandShouldCreateNewPoll(){
+    public void createPollCommandShouldCreateNewPoll() throws Exception{
         fixture.given()
                 .when(
                         new CreatePollCommand(pollId, pollContent, pollDeadlineDate)
@@ -74,6 +77,22 @@ public class PollTest {
     }
 
     @Test
+    public void finishPollCommandShouldGenerateEventWithCorrectAmountOfVotes() throws Exception {
+        fixture
+                .given(
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate),
+                        new MemberInterestedEvent(pollId, userId),
+                        new MemberInterestedEvent(pollId, anotherUserId)
+                )
+                .when(
+                        new FinishPollCommand(pollId, userId)
+                )
+                .expectEvents(
+                        new PollFinishedEvent(pollId, 2)
+                );
+    }
+
+    @Test
     public void prolongPollCommandShouldProlongPoll() throws Exception {
         final DateTime newDeadlineDate = new DateTime().plusDays(1);
 
@@ -106,4 +125,45 @@ public class PollTest {
                         IllegalArgumentException.class
                 );
     }
+
+    @Test
+    public void voteIdeaCommandShouldVoteForIdea() throws Exception{
+        fixture
+                .given(
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate)
+                )
+                .when(
+                        new VoteIdeaCommand(pollId, userId)
+                )
+                .expectEvents(
+                        new MemberInterestedEvent(pollId, userId)
+                );
+    }
+
+    @Test
+    public void voteIdeaCommandShouldThrowExceptionIfPollWasAlreadyFinished() throws Exception {
+        fixture
+                .given(
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate),
+                        new PollFinishedEvent(pollId, 0)
+                )
+                .when(
+                        new VoteIdeaCommand(pollId, userId)
+                )
+                .expectException(IllegalStateException.class);
+    }
+
+    @Test
+    public void voteIdeaCommandShouldThrowExceptionIfVotedTwice() throws Exception {
+        fixture
+                .given(
+                        new PollCreatedEvent(pollId, pollContent, pollDeadlineDate),
+                        new MemberInterestedEvent(pollId, userId)
+                )
+                .when(
+                        new VoteIdeaCommand(pollId, userId)
+                )
+                .expectException(IllegalArgumentException.class);
+    }
+
 }

@@ -1,5 +1,6 @@
 package agh.ddd.groups.poll;
 
+import agh.ddd.groups.poll.events.MemberInterestedEvent;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.events.PollProlongedEvent;
@@ -11,6 +12,9 @@ import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import org.joda.time.DateTime;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Michał Ciołczyk
  */
@@ -20,6 +24,7 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     private String content; //The idea is described here.
     private PollState pollState;
     private DateTime pollDeadlineDate;
+    private Set<UserId> userVotes = new HashSet<UserId>();
 
     private Poll() {}
 
@@ -44,10 +49,19 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
 
         //TODO check user privileges here?
 
-        //TODO set votes count to real value
-        final long votes = 0;
+        apply(new PollFinishedEvent(pollId, userVotes.size()));
+    }
 
-        apply(new PollFinishedEvent(pollId, votes));
+    public void vote(UserId userId) {
+        if(pollState != PollState.OPENED) {
+            throw new IllegalStateException("You can vote only if the poll is opened!");
+        }
+
+        if(userVotes.contains(userId)){
+            throw new IllegalArgumentException("You can vote only once!");
+        }
+
+        apply(new MemberInterestedEvent(pollId, userId));
     }
 
     @EventSourcingHandler
@@ -66,5 +80,10 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     @EventSourcingHandler
     public void onPollFinished(PollFinishedEvent event) {
         pollState = PollState.FINISHED;
+    }
+
+    @EventSourcingHandler
+    public void onMemberInterested(MemberInterestedEvent event){
+        userVotes.add(event.getUserId());
     }
 }
