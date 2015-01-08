@@ -1,13 +1,13 @@
 package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.valueobjects.PollId;
-import agh.ddd.groups.poll.valueobjects.PollState;
+import org.joda.time.DateTime;
 
 /**
  * @author Michał Ciołczyk
  */
 public class PollFactory {
-    public static Poll create(PollId pollId, String content, PollState pollState) {
-        return new Poll(pollId, content, pollState);
+    public static Poll create(PollId pollId, String content, DateTime pollDeadlineDate) {
+        return new Poll(pollId, content, pollDeadlineDate);
     }
 }

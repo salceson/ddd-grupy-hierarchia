@@ -6,6 +6,7 @@ import agh.ddd.groups.poll.valueobjects.PollState;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
+import org.joda.time.DateTime;
 
 /**
  * @author Michał Ciołczyk
@@ -13,19 +14,21 @@ import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 public class Poll extends AbstractAnnotatedAggregateRoot{
     @AggregateIdentifier
     private PollId pollId;
-    private String content;
+    private String content; //The idea is described here.
     private PollState pollState;
+    private DateTime pollDeadlineDate;
 
     private Poll(){}
 
-    public Poll(PollId pollId, String content, PollState pollState){
-        apply(new PollCreatedEvent(pollId, content, pollState));
+    public Poll(PollId pollId, String content, DateTime pollDeadlineDate){
+        apply(new PollCreatedEvent(pollId, content, pollDeadlineDate));
     }
 
     @EventSourcingHandler
     public void onPollCreated(PollCreatedEvent event){
         pollId = event.getPollId();
         content = event.getContent();
-        pollState = event.getPollState();
+        pollDeadlineDate = event.getPollDeadlineDate();
+        pollState = PollState.OPENED;
     }
 }

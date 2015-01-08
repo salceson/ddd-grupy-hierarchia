@@ -23,7 +23,8 @@ public class PollCommandHandler {
 
     @CommandHandler
     public void handleCreatePollCommand(CreatePollCommand createPollCommand){
-        Poll poll = PollFactory.create(createPollCommand.getPollId(), createPollCommand.getContent(), PollState.OPENED);
+        Poll poll = PollFactory.create(createPollCommand.getPollId(), createPollCommand.getContent(),
+                createPollCommand.getPollDeadlineDate());
         pollRepository.add(poll);
     }
 
