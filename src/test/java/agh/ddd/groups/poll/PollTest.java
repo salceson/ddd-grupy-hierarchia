@@ -2,13 +2,9 @@ package agh.ddd.groups.poll;
 
 import agh.ddd.groups.poll.commands.CreatePollCommand;
 import agh.ddd.groups.poll.commands.FinishPollCommand;
-import agh.ddd.groups.poll.commands.VoteIdeaCommand;
-import agh.ddd.groups.poll.events.MemberInterestedEvent;
 import agh.ddd.groups.poll.commands.ProlongPollCommand;
-import agh.ddd.groups.poll.events.PollCreatedEvent;
-import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
-import agh.ddd.groups.poll.events.PollFinishedEvent;
-import agh.ddd.groups.poll.events.PollProlongedEvent;
+import agh.ddd.groups.poll.commands.VoteIdeaCommand;
+import agh.ddd.groups.poll.events.*;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
 import agh.ddd.groups.poll.valueobjects.UserId;
