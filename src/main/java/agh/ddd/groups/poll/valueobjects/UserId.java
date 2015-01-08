@@ -6,7 +6,7 @@ package agh.ddd.groups.poll.valueobjects;
 public class UserId {
     private final long id;
 
-    public UserId(long id) {
+    private UserId(long id) {
         this.id = id;
     }
 

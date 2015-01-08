@@ -6,7 +6,7 @@ package agh.ddd.groups.poll.valueobjects;
 public class PollId {
     private final long id;
 
-    public PollId(long id) {
+    private PollId(long id) {
         this.id = id;
     }
 
