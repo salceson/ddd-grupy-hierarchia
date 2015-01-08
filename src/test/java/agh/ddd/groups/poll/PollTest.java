@@ -12,7 +12,14 @@ import org.axonframework.test.Fixtures;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+/* TODO: Create proper configuration
+TODO: Tests for deadline saga
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:poll-test-context.xml"})*/
 public class PollTest {
     private FixtureConfiguration fixture;
 
@@ -159,5 +166,4 @@ public class PollTest {
                 )
                 .expectException(IllegalArgumentException.class);
     }
-
 }
