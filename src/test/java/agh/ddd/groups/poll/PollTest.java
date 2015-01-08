@@ -38,7 +38,7 @@ public class PollTest {
 
     @Test
     public void createPollCommandShouldCreateNewPoll() throws Exception{
-        fixture.given()
+        fixture.givenNoPriorActivity()
                 .when(
                         new CreatePollCommand(pollId, pollContent, pollDeadlineDate)
                 )
