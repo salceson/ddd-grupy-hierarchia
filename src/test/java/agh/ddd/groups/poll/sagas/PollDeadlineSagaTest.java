@@ -36,7 +36,7 @@ public class PollDeadlineSagaTest {
     }
 
     @Test
-    public void shouldPollReceiveNoEventsWhenFinishCommandDispatchedAndThenDeadlinePass() throws Exception {
+    public void shouldPollReceiveNoEventsWhenFinishedAndThenDeadlinePass() throws Exception {
         fixture
                 .givenAggregate(pollId)
                 .published(
@@ -60,7 +60,7 @@ public class PollDeadlineSagaTest {
     }
 
     @Test
-    public void shouldPollReceiveNoEventsWhenProlongedAndThenFinishCommandDispatchedAndThePreviousDeadlinePass() throws Exception {
+    public void shouldPollReceiveNoEventsWhenProlongedAndThenFinishedAndThePreviousDeadlinePass() throws Exception {
         fixture
                 .givenAggregate(pollId)
                 .published(
@@ -73,7 +73,7 @@ public class PollDeadlineSagaTest {
     }
 
     @Test
-    public void shouldPollReceiveNoEventsWhenProlongedAndThenFinishCommandDispatchedAndTheNewDeadlinePass() throws Exception {
+    public void shouldPollReceiveNoEventsWhenProlongedAndThenFinishedAndTheNewDeadlinePass() throws Exception {
         fixture
                 .givenAggregate(pollId)
                 .published(
