@@ -29,6 +29,9 @@ public class Group extends AbstractAnnotatedAggregateRoot {
     }
 
     public void close() {
+        if (state == CLOSED) {
+            throw new GroupAlreadyClosedException(id);
+        }
         apply(new GroupClosedEvent(id));
     }
 
@@ -42,9 +45,6 @@ public class Group extends AbstractAnnotatedAggregateRoot {
 
     @EventSourcingHandler
     public void onGroupClosedEvent(GroupClosedEvent event) {
-        if (state == CLOSED) {
-            throw new GroupAlreadyClosedException(id);
-        }
         state = CLOSED;
     }
 
