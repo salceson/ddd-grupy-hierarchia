@@ -19,7 +19,7 @@ public class PollCommandHandler {
 
     @Autowired
     @Qualifier("pollRepository")
-    public void setEnrollmentRepository(Repository<Poll> pollRepository) {
+    public void setPollRepository(Repository<Poll> pollRepository) {
         this.pollRepository = pollRepository;
     }
 

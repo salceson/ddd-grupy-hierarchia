@@ -26,7 +26,7 @@ public class PollTest {
     public void setUp() throws Exception {
         fixture = Fixtures.newGivenWhenThenFixture(Poll.class);
         PollCommandHandler pollCommandHandler = new PollCommandHandler();
-        pollCommandHandler.setEnrollmentRepository(fixture.getRepository());
+        pollCommandHandler.setPollRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(pollCommandHandler);
     }
 
