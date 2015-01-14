@@ -7,8 +7,10 @@ import org.junit.Test;
 
 import agh.ddd.groups.idea.commands.AcceptIdeaCommand;
 import agh.ddd.groups.idea.commands.ProposeIdeaCommand;
+import agh.ddd.groups.idea.commands.RejectIdeaCommand;
 import agh.ddd.groups.idea.events.IdeaAcceptedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
+import agh.ddd.groups.idea.events.IdeaRejectedEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 
 public class IdeaTest {
@@ -72,6 +74,66 @@ public class IdeaTest {
                 )
                 .expectException(
                         IllegalStateException.class
+                );
+    }
+    
+
+    @Test
+    public void acceptIdeaCommandShouldThrowExceptionIfIdeaWasAlreadyRejected() throws Exception {
+        fixture
+                .given(
+                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                		new IdeaRejectedEvent(ideaId)
+                )
+                .when(
+                		new AcceptIdeaCommand(ideaId)
+                )
+                .expectException(
+                        IllegalStateException.class
+                );
+    }
+    
+    @Test
+    public void rejectIdeaCommandShouldGenerateIdeaRejectedEvent() throws Exception {
+        fixture.given(
+        				new IdeaProposedEvent(ideaId, sectionId, title, description, author)
+        		)
+                .when(
+                        new RejectIdeaCommand(ideaId)
+                )
+                .expectEvents(
+                        new IdeaRejectedEvent(ideaId)
+                );
+    }
+    
+    @Test
+    public void rejectIdeaCommandShouldThrowExceptionIfIdeaWasAlreadyRejected() throws Exception {
+        fixture
+                .given(
+                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                		new IdeaRejectedEvent(ideaId)
+                )
+                .when(
+                		new RejectIdeaCommand(ideaId)
+                )
+                .expectException(
+                        IllegalStateException.class
+                );
+    }
+    
+
+    @Test
+    public void rejectIdeaCommandShouldGenerateIdeaRejectedEventIfIdeaWasAlreadyAccepted() throws Exception {
+        fixture
+                .given(
+                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                		new IdeaAcceptedEvent(ideaId)
+                )
+                .when(
+                		new RejectIdeaCommand(ideaId)
+                )
+                .expectEvents(
+                        new IdeaRejectedEvent(ideaId)
                 );
     }
 }
