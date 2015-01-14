@@ -6,9 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import agh.ddd.groups.idea.commands.AcceptIdeaCommand;
+import agh.ddd.groups.idea.commands.ConfirmIdeaCommand;
 import agh.ddd.groups.idea.commands.ProposeIdeaCommand;
 import agh.ddd.groups.idea.commands.RejectIdeaCommand;
 import agh.ddd.groups.idea.events.IdeaAcceptedEvent;
+import agh.ddd.groups.idea.events.IdeaConfirmedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
 import agh.ddd.groups.idea.events.IdeaPublishedEvent;
 import agh.ddd.groups.idea.events.IdeaRejectedEvent;
@@ -136,6 +138,21 @@ public class IdeaTest {
                 )
                 .expectEvents(
                         new IdeaRejectedEvent(ideaId)
+                );
+    }
+    
+    @Test
+    public void confirmIdeaCommandShouldGenerateIdeaConfirmedEvent() throws Exception {
+        fixture
+                .given(
+                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                		new IdeaAcceptedEvent(ideaId)
+                )
+                .when(
+                		new ConfirmIdeaCommand(ideaId)
+                )
+                .expectEvents(
+                        new IdeaConfirmedEvent(ideaId)
                 );
     }
 }
