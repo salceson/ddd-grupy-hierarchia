@@ -5,7 +5,9 @@ import org.axonframework.test.Fixtures;
 import org.junit.Before;
 import org.junit.Test;
 
+import agh.ddd.groups.idea.commands.AcceptIdeaCommand;
 import agh.ddd.groups.idea.commands.ProposeIdeaCommand;
+import agh.ddd.groups.idea.events.IdeaAcceptedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 
@@ -42,6 +44,34 @@ public class IdeaTest {
                 .expectEvents(
                         new IdeaProposedEvent(ideaId, sectionId, title, description, author)
                 );
+    }
+    
 
+    @Test
+    public void acceptIdeaCommandShouldGenerateIdeaAcceptedEvent() throws Exception {
+        fixture.given(
+        				new IdeaProposedEvent(ideaId, sectionId, title, description, author)
+        		)
+                .when(
+                        new AcceptIdeaCommand(ideaId)
+                )
+                .expectEvents(
+                        new IdeaAcceptedEvent(ideaId)
+                );
+    }
+    
+    @Test
+    public void acceptIdeaCommandShouldThrowExceptionIfIdeaWasAlreadyAccepted() throws Exception {
+        fixture
+                .given(
+                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                		new IdeaAcceptedEvent(ideaId)
+                )
+                .when(
+                		new AcceptIdeaCommand(ideaId)
+                )
+                .expectException(
+                        IllegalStateException.class
+                );
     }
 }

@@ -5,6 +5,7 @@ import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
+import agh.ddd.groups.idea.events.IdeaAcceptedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 import agh.ddd.groups.idea.valueobject.IdeaState;
@@ -26,6 +27,14 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 	        apply(new IdeaProposedEvent(ideaId, sectionId, title, description, author));
 	    }
 	    
+	    public void accept() {
+	    	if (this.state != IdeaState.PROPOSED) {
+	    		throw new IllegalStateException("Illegal operation.");
+	    	}
+	    	
+	    	apply(new IdeaAcceptedEvent(this.id));
+	    }
+	    
 	    @EventSourcingHandler
 	    public void onIdeaProposed(IdeaProposedEvent event) {
 	        this.id = event.getId();
@@ -34,5 +43,10 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 	        this.description = event.getDescription();
 	        this.author = event.getAuthor();
 	        this.state = IdeaState.PROPOSED;
+	    }
+	    
+	    @EventSourcingHandler
+	    public void onIdeaAccepted(IdeaAcceptedEvent event) {
+	    	this.state = IdeaState.ACCEPTED;
 	    }
 }
