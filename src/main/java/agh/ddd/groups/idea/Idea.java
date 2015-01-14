@@ -27,6 +27,9 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 	    @EventSourcingHandler
 	    public void onIdeaProposed(IdeaProposedEvent event) {
 	        this.id = event.getId();
+	        this.sectionId = event.getSectionId();
 	        this.title = event.getTitle();
+	        this.description = event.getDescription();
+	        this.author = event.getAuthor();
 	    }
 }
