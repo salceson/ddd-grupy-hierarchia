@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import agh.ddd.groups.idea.commands.AcceptIdeaCommand;
+import agh.ddd.groups.idea.commands.ChooseLeaderCommand;
 import agh.ddd.groups.idea.commands.ConfirmIdeaCommand;
 import agh.ddd.groups.idea.commands.ProposeIdeaCommand;
 import agh.ddd.groups.idea.commands.RejectIdeaCommand;
@@ -39,6 +40,12 @@ public class IdeaCommandHandler {
 		idea.confirm();
 	}
 
+	@CommandHandler
+	public void handleChooseLeaderCommand(ChooseLeaderCommand command) {
+		final Idea idea = ideaRepository.load(command.getIdeaId());
+		idea.setLeader(command.getLeaderUserId());
+	}
+	
 	@Autowired
 	@Qualifier("ideaRepository")
 	public void setIdeaRepository(Repository<Idea> ideaRepository) {

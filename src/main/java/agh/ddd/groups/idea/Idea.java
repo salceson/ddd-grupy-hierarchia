@@ -10,6 +10,7 @@ import agh.ddd.groups.idea.events.IdeaConfirmedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
 import agh.ddd.groups.idea.events.IdeaPublishedEvent;
 import agh.ddd.groups.idea.events.IdeaRejectedEvent;
+import agh.ddd.groups.idea.events.LeaderChosenEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 import agh.ddd.groups.idea.valueobject.IdeaState;
 
@@ -18,9 +19,11 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 		private IdeaId id;
 		private int pollId;
 		private int sectionId;
+		private Integer leaderUserId;
 	    private String title;
 	    private String description;
 	    private String author;
+	    
 	    private IdeaState state;
 
 	    private Idea() {
@@ -51,13 +54,30 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 				throw new IllegalStateException("Illegal operation.");
 			}
 			
+			if (this.leaderUserId == null) {
+				throw new IllegalStateException("Leader not chosen.");
+			}
+			
 			apply(new IdeaConfirmedEvent(this.id));
+		}
+	    
+	    public void setLeader(int leaderUserId) {
+	    	if (this.state == IdeaState.PROPOSED || this.state == IdeaState.REJECTED) {
+				throw new IllegalStateException("Illegal operation.");
+			}
+	    	
+	    	if (this.leaderUserId != null && this.leaderUserId.equals(leaderUserId)) {
+	    		throw new IllegalStateException("Same leader chosen.");
+	    	}
+	    	
+	    	apply(new LeaderChosenEvent(this.id, leaderUserId));
 		}
 	    
 	    @EventSourcingHandler
 	    public void onIdeaProposed(IdeaProposedEvent event) {
 	        this.id = event.getId();
 	        this.sectionId = event.getSectionId();
+	        this.leaderUserId = null;
 	        this.title = event.getTitle();
 	        this.description = event.getDescription();
 	        this.author = event.getAuthor();
@@ -80,5 +100,10 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 	    @EventSourcingHandler
 	    public void onIdeaConfirmed(IdeaConfirmedEvent event) {
 	    	this.state = IdeaState.CONFIRMED;
-	    }	
+	    }
+	    
+	    @EventSourcingHandler
+	    public void onLeaderChosen(LeaderChosenEvent event) {
+	    	this.leaderUserId = event.getLeaderUserId();
+	    }
 }
