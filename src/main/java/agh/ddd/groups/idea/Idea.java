@@ -7,6 +7,7 @@ import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
+import agh.ddd.groups.idea.valueobject.IdeaState;
 
 public class Idea extends AbstractAnnotatedAggregateRoot {
 		@AggregateIdentifier
@@ -16,6 +17,7 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 	    private String title;
 	    private String description;
 	    private String author;
+	    private IdeaState state;
 
 	    private Idea() {
 	    }
@@ -31,5 +33,6 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
 	        this.title = event.getTitle();
 	        this.description = event.getDescription();
 	        this.author = event.getAuthor();
+	        this.state = IdeaState.PROPOSED;
 	    }
 }

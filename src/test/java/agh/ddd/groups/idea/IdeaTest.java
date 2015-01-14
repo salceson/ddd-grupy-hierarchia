@@ -1,4 +1,4 @@
-package agh.ddd.groups.idea;
+	package agh.ddd.groups.idea;
 
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -35,7 +35,7 @@ public class IdeaTest {
 
     @Test
     public void proposeIdeaCommandShouldGenerateIdeaProposedEvent() throws Exception {
-        fixture.given()
+        fixture.givenNoPriorActivity()
                 .when(
                         new ProposeIdeaCommand(ideaId, sectionId, title, description, author)
                 )
