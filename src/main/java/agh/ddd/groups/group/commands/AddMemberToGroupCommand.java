@@ -9,8 +9,8 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
  */
 public class AddMemberToGroupCommand {
     @TargetAggregateIdentifier
-    private GroupId groupId;
-    private Member member;
+    private final GroupId groupId;
+    private final Member member;
 
     public AddMemberToGroupCommand(GroupId groupId, Member member) {
         this.groupId = groupId;

@@ -7,9 +7,9 @@ import agh.ddd.groups.group.valueobjects.GroupId;
  * Created by mikolaj on 09.01.15.
  */
 public class MoveMemberBetweenGroupsCommand {
-    private GroupId fromGroup;
-    private GroupId toGroup;
-    private Member member;
+    private final GroupId fromGroup;
+    private final GroupId toGroup;
+    private final Member member;
 
     public MoveMemberBetweenGroupsCommand(GroupId fromGroup, GroupId toGroup, Member member) {
         this.fromGroup = fromGroup;
