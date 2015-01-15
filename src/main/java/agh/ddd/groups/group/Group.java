@@ -19,7 +19,6 @@ public class Group extends AbstractAnnotatedAggregateRoot {
     @AggregateIdentifier
     private GroupId id;
     private GroupConfiguration configuration;
-    @EventSourcedMember
     private Set<Member> members = new HashSet<Member>();
 
     private Group() {
