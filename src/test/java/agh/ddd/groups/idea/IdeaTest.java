@@ -1,4 +1,4 @@
-	package agh.ddd.groups.idea;
+package agh.ddd.groups.idea;
 
 import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
@@ -21,10 +21,10 @@ import agh.ddd.groups.idea.valueobject.IdeaId;
 public class IdeaTest {
 
     private FixtureConfiguration fixture;
-	private IdeaId ideaId;
-	private int sectionId;
-	private int leaderUserId;
-	private int anotherLeaderUserId;
+    private IdeaId ideaId;
+    private int sectionId;
+    private int leaderUserId;
+    private int anotherLeaderUserId;
     private String title;
     private String description;
     private String author;
@@ -56,13 +56,13 @@ public class IdeaTest {
                         new IdeaProposedEvent(ideaId, sectionId, title, description, author)
                 );
     }
-    
+
 
     @Test
     public void acceptIdeaCommandShouldGenerateIdeaAcceptedEventAndIdeaPublishedEvent() throws Exception {
         fixture.given(
-        				new IdeaProposedEvent(ideaId, sectionId, title, description, author)
-        		)
+                new IdeaProposedEvent(ideaId, sectionId, title, description, author)
+        )
                 .when(
                         new AcceptIdeaCommand(ideaId)
                 )
@@ -71,43 +71,43 @@ public class IdeaTest {
                         new IdeaPublishedEvent(ideaId)
                 );
     }
-    
+
     @Test
     public void acceptIdeaCommandShouldThrowExceptionIfIdeaWasAlreadyAccepted() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId)
                 )
                 .when(
-                		new AcceptIdeaCommand(ideaId)
+                        new AcceptIdeaCommand(ideaId)
                 )
                 .expectException(
                         IllegalStateException.class
                 );
     }
-    
+
 
     @Test
     public void acceptIdeaCommandShouldThrowExceptionIfIdeaWasAlreadyRejected() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaRejectedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaRejectedEvent(ideaId)
                 )
                 .when(
-                		new AcceptIdeaCommand(ideaId)
+                        new AcceptIdeaCommand(ideaId)
                 )
                 .expectException(
                         IllegalStateException.class
                 );
     }
-    
+
     @Test
     public void rejectIdeaCommandShouldGenerateIdeaRejectedEvent() throws Exception {
         fixture.given(
-        				new IdeaProposedEvent(ideaId, sectionId, title, description, author)
-        		)
+                new IdeaProposedEvent(ideaId, sectionId, title, description, author)
+        )
                 .when(
                         new RejectIdeaCommand(ideaId)
                 )
@@ -115,141 +115,141 @@ public class IdeaTest {
                         new IdeaRejectedEvent(ideaId)
                 );
     }
-    
+
     @Test
     public void rejectIdeaCommandShouldThrowExceptionIfIdeaWasAlreadyRejected() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaRejectedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaRejectedEvent(ideaId)
                 )
                 .when(
-                		new RejectIdeaCommand(ideaId)
+                        new RejectIdeaCommand(ideaId)
                 )
                 .expectException(
                         IllegalStateException.class
                 );
     }
-    
+
 
     @Test
     public void rejectIdeaCommandShouldGenerateIdeaRejectedEventIfIdeaWasAlreadyAccepted() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId)
                 )
                 .when(
-                		new RejectIdeaCommand(ideaId)
+                        new RejectIdeaCommand(ideaId)
                 )
                 .expectEvents(
                         new IdeaRejectedEvent(ideaId)
                 );
     }
-    
+
     @Test
     public void confirmIdeaCommandShouldGenerateIdeaConfirmedEvent() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId),
-                		new LeaderChosenEvent(ideaId, leaderUserId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId),
+                        new LeaderChosenEvent(ideaId, leaderUserId)
                 )
                 .when(
-                		new ConfirmIdeaCommand(ideaId)
+                        new ConfirmIdeaCommand(ideaId)
                 )
                 .expectEvents(
                         new IdeaConfirmedEvent(ideaId)
                 );
     }
-    
+
     @Test
     public void confirmIdeaCommandShouldThrowExceptionIfLeaderNotChosen() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId)
                 )
                 .when(
-                		new ConfirmIdeaCommand(ideaId)
+                        new ConfirmIdeaCommand(ideaId)
                 )
                 .expectException(
                         IllegalStateException.class
                 );
     }
-    
+
     @Test
     public void chooseLeaderCommandShouldGenerateLeaderChosenEvent() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId)
                 )
                 .when(
-                		new ChooseLeaderCommand(ideaId, leaderUserId)
+                        new ChooseLeaderCommand(ideaId, leaderUserId)
                 )
                 .expectEvents(
                         new LeaderChosenEvent(ideaId, leaderUserId)
                 );
     }
-    
+
     @Test
     public void chooseLeaderCommandShouldThrowExceptionIfIdeaRejected() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaRejectedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaRejectedEvent(ideaId)
                 )
                 .when(
-                		new ChooseLeaderCommand(ideaId, leaderUserId)
+                        new ChooseLeaderCommand(ideaId, leaderUserId)
                 )
                 .expectException(
                         IllegalStateException.class
                 );
     }
-    
+
     @Test
     public void chooseLeaderCommandShouldGenerateLeaderChosenEventIfLeaderAlreadyChosen() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId),
-                		new LeaderChosenEvent(ideaId, leaderUserId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId),
+                        new LeaderChosenEvent(ideaId, leaderUserId)
                 )
                 .when(
-                		new ChooseLeaderCommand(ideaId, anotherLeaderUserId)
+                        new ChooseLeaderCommand(ideaId, anotherLeaderUserId)
                 )
                 .expectEvents(
                         new LeaderChosenEvent(ideaId, anotherLeaderUserId)
                 );
     }
-    
+
     @Test
     public void chooseLeaderCommandShouldThrowExceptionIfSameLeaderChosen() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId),
-                		new LeaderChosenEvent(ideaId, leaderUserId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId),
+                        new LeaderChosenEvent(ideaId, leaderUserId)
                 )
                 .when(
-                		new ChooseLeaderCommand(ideaId, leaderUserId)
+                        new ChooseLeaderCommand(ideaId, leaderUserId)
                 )
                 .expectException(
                         IllegalStateException.class
                 );
     }
-    
+
     @Test
     public void chooseLeaderCommandShouldGenerateLeaderChosenEventIfIdeaAlreadyConfirmed() throws Exception {
         fixture
                 .given(
-                		new IdeaProposedEvent(ideaId, sectionId, title, description, author),
-                		new IdeaAcceptedEvent(ideaId),
-                		new IdeaConfirmedEvent(ideaId)
+                        new IdeaProposedEvent(ideaId, sectionId, title, description, author),
+                        new IdeaAcceptedEvent(ideaId),
+                        new IdeaConfirmedEvent(ideaId)
                 )
                 .when(
-                		new ChooseLeaderCommand(ideaId, leaderUserId)
+                        new ChooseLeaderCommand(ideaId, leaderUserId)
                 )
                 .expectEvents(
                         new LeaderChosenEvent(ideaId, leaderUserId)

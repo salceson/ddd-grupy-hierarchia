@@ -15,95 +15,95 @@ import agh.ddd.groups.idea.valueobject.IdeaId;
 import agh.ddd.groups.idea.valueobject.IdeaState;
 
 public class Idea extends AbstractAnnotatedAggregateRoot {
-		@AggregateIdentifier
-		private IdeaId id;
-		private int pollId;
-		private int sectionId;
-		private Integer leaderUserId;
-	    private String title;
-	    private String description;
-	    private String author;
-	    
-	    private IdeaState state;
+    @AggregateIdentifier
+    private IdeaId id;
+    private int pollId;
+    private int sectionId;
+    private Integer leaderUserId;
+    private String title;
+    private String description;
+    private String author;
 
-	    private Idea() {
-	    }
+    private IdeaState state;
 
-	    public Idea(IdeaId ideaId, int sectionId, String title, String description, String author) {
-	        apply(new IdeaProposedEvent(ideaId, sectionId, title, description, author));
-	    }
-	    
-	    public void accept() {
-	    	if (this.state != IdeaState.PROPOSED) {
-	    		throw new IllegalStateException("Illegal operation.");
-	    	}
-	    	
-	    	apply(new IdeaAcceptedEvent(this.id));
-	    }
-	    
-	    public void reject() {
-	    	if (this.state != IdeaState.ACCEPTED && this.state != IdeaState.PROPOSED) {
-	    		throw new IllegalStateException("Illegal operation.");
-	    	}
-	    	
-	    	apply(new IdeaRejectedEvent(this.id));
-	    }
+    private Idea() {
+    }
 
-	    public void confirm() {
-			if (this.state != IdeaState.ACCEPTED) {
-				throw new IllegalStateException("Illegal operation.");
-			}
-			
-			if (this.leaderUserId == null) {
-				throw new IllegalStateException("Leader not chosen.");
-			}
-			
-			apply(new IdeaConfirmedEvent(this.id));
-		}
-	    
-	    public void setLeader(int leaderUserId) {
-	    	if (this.state == IdeaState.PROPOSED || this.state == IdeaState.REJECTED) {
-				throw new IllegalStateException("Illegal operation.");
-			}
-	    	
-	    	if (this.leaderUserId != null && this.leaderUserId.equals(leaderUserId)) {
-	    		throw new IllegalStateException("Same leader chosen.");
-	    	}
-	    	
-	    	apply(new LeaderChosenEvent(this.id, leaderUserId));
-		}
-	    
-	    @EventSourcingHandler
-	    public void onIdeaProposed(IdeaProposedEvent event) {
-	        this.id = event.getId();
-	        this.sectionId = event.getSectionId();
-	        this.leaderUserId = null;
-	        this.title = event.getTitle();
-	        this.description = event.getDescription();
-	        this.author = event.getAuthor();
-	        this.state = IdeaState.PROPOSED;
-	    }
-	    
-	    @EventSourcingHandler
-	    public void onIdeaAccepted(IdeaAcceptedEvent event) {
-	    	this.state = IdeaState.ACCEPTED;
-	    	
-	    	// legal?
-	    	apply(new IdeaPublishedEvent(this.id)); 
-	    }
-	    
-	    @EventSourcingHandler
-	    public void onIdeaRejected(IdeaRejectedEvent event) {
-	    	this.state = IdeaState.REJECTED;
-	    }
+    public Idea(IdeaId ideaId, int sectionId, String title, String description, String author) {
+        apply(new IdeaProposedEvent(ideaId, sectionId, title, description, author));
+    }
 
-	    @EventSourcingHandler
-	    public void onIdeaConfirmed(IdeaConfirmedEvent event) {
-	    	this.state = IdeaState.CONFIRMED;
-	    }
-	    
-	    @EventSourcingHandler
-	    public void onLeaderChosen(LeaderChosenEvent event) {
-	    	this.leaderUserId = event.getLeaderUserId();
-	    }
+    public void accept() {
+        if (this.state != IdeaState.PROPOSED) {
+            throw new IllegalStateException("Illegal operation.");
+        }
+
+        apply(new IdeaAcceptedEvent(this.id));
+    }
+
+    public void reject() {
+        if (this.state != IdeaState.ACCEPTED && this.state != IdeaState.PROPOSED) {
+            throw new IllegalStateException("Illegal operation.");
+        }
+
+        apply(new IdeaRejectedEvent(this.id));
+    }
+
+    public void confirm() {
+        if (this.state != IdeaState.ACCEPTED) {
+            throw new IllegalStateException("Illegal operation.");
+        }
+
+        if (this.leaderUserId == null) {
+            throw new IllegalStateException("Leader not chosen.");
+        }
+
+        apply(new IdeaConfirmedEvent(this.id));
+    }
+
+    public void setLeader(int leaderUserId) {
+        if (this.state == IdeaState.PROPOSED || this.state == IdeaState.REJECTED) {
+            throw new IllegalStateException("Illegal operation.");
+        }
+
+        if (this.leaderUserId != null && this.leaderUserId.equals(leaderUserId)) {
+            throw new IllegalStateException("Same leader chosen.");
+        }
+
+        apply(new LeaderChosenEvent(this.id, leaderUserId));
+    }
+
+    @EventSourcingHandler
+    public void onIdeaProposed(IdeaProposedEvent event) {
+        this.id = event.getId();
+        this.sectionId = event.getSectionId();
+        this.leaderUserId = null;
+        this.title = event.getTitle();
+        this.description = event.getDescription();
+        this.author = event.getAuthor();
+        this.state = IdeaState.PROPOSED;
+    }
+
+    @EventSourcingHandler
+    public void onIdeaAccepted(IdeaAcceptedEvent event) {
+        this.state = IdeaState.ACCEPTED;
+
+        // legal?
+        apply(new IdeaPublishedEvent(this.id));
+    }
+
+    @EventSourcingHandler
+    public void onIdeaRejected(IdeaRejectedEvent event) {
+        this.state = IdeaState.REJECTED;
+    }
+
+    @EventSourcingHandler
+    public void onIdeaConfirmed(IdeaConfirmedEvent event) {
+        this.state = IdeaState.CONFIRMED;
+    }
+
+    @EventSourcingHandler
+    public void onLeaderChosen(LeaderChosenEvent event) {
+        this.leaderUserId = event.getLeaderUserId();
+    }
 }
