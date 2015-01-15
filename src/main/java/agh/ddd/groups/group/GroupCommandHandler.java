@@ -1,7 +1,6 @@
 package agh.ddd.groups.group;
 
-import agh.ddd.groups.group.commands.CloseGroupCommand;
-import agh.ddd.groups.group.commands.CreateGroupCommand;
+import agh.ddd.groups.group.commands.*;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +27,23 @@ public class GroupCommandHandler {
     public void handleCloseGroupCommand(CloseGroupCommand command) {
         Group group = repository.load(command.getId());
         group.close();
+    }
+
+    @CommandHandler
+    public void handleAddMembersCommand(AddMembersCommand command) {
+        Group group = repository.load(command.getId());
+        group.addMembers(command.getMembers());
+    }
+
+    @CommandHandler
+    public void handleRemoveMembersCommand(RemoveMembersCommand command) {
+        Group group = repository.load(command.getId());
+        group.removeMembers(command.getMembers());
+    }
+
+    @CommandHandler
+    public void handleSplitGroupCommand(SplitGroupCommand command) {
+        Group group = repository.load(command.getOldGroupId());
+        group.split(command.getNewGroupId(), command.getNewGroupName(), command.getMovedMembers());
     }
 }

@@ -3,6 +3,7 @@ package agh.ddd.groups.group.events;
 import agh.ddd.groups.group.valueobjects.GroupId;
 
 public class GroupCreatedEvent {
+
     private final GroupId id;
     private final String name;
 
