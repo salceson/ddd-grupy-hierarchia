@@ -35,8 +35,6 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     }
 
     public void prolong(DateTime newDeadlineDate, UserId userId) {
-        //TODO check user privileges here?
-
         if(newDeadlineDate.isBeforeNow()) {
             throw new IllegalArgumentException("Cannot prolong poll to past date!");
         }
@@ -48,8 +46,6 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
         if(pollState == PollState.FINISHED) {
             throw new IllegalStateException("Poll already finished!");
         }
-
-        //TODO check user privileges here?
 
         apply(new PollFinishedEvent(pollId, userVotes.size()));
     }

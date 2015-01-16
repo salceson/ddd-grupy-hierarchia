@@ -4,6 +4,7 @@ import agh.ddd.groups.poll.commands.PollDeadlineReachedCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.events.PollProlongedEvent;
+import com.google.common.base.Optional;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.eventhandling.scheduling.EventScheduler;
 import org.axonframework.eventhandling.scheduling.ScheduleToken;
@@ -21,7 +22,7 @@ public class PollDeadlineSaga extends AbstractAnnotatedSaga implements Serializa
     private static final long serialVersionUID = 1L;
     private transient EventScheduler eventScheduler;
     private transient CommandGateway commandGateway;
-    private ScheduleToken scheduleToken;
+    private Optional<ScheduleToken> scheduleTokenOptional = Optional.absent();
 
     @Autowired
     public void setEventScheduler(EventScheduler eventScheduler) {
@@ -36,21 +37,28 @@ public class PollDeadlineSaga extends AbstractAnnotatedSaga implements Serializa
     @StartSaga
     @SagaEventHandler(associationProperty = "pollId")
     public void handle(final PollCreatedEvent pollCreatedEvent){
-        if(scheduleToken != null){
+        if (scheduleTokenOptional.isPresent()) {
+            final ScheduleToken scheduleToken = scheduleTokenOptional.get();
             eventScheduler.cancelSchedule(scheduleToken);
         }
 
-        scheduleToken = eventScheduler.schedule(
+        final ScheduleToken scheduledToken = eventScheduler.schedule(
                 pollCreatedEvent.getPollDeadlineDate(),
                 new SagaDeadlineReachedEvent(pollCreatedEvent.getPollId())
         );
+
+        scheduleTokenOptional = Optional.of(scheduledToken);
     }
 
     @SagaEventHandler(associationProperty = "pollId")
     public void handle(final PollFinishedEvent pollFinishedEvent){
-        if(scheduleToken != null){
+        if (scheduleTokenOptional.isPresent()) {
+            final ScheduleToken scheduleToken = scheduleTokenOptional.get();
             eventScheduler.cancelSchedule(scheduleToken);
+
+            scheduleTokenOptional = Optional.absent();
         }
+
         end();
     }
 
@@ -62,12 +70,16 @@ public class PollDeadlineSaga extends AbstractAnnotatedSaga implements Serializa
 
     @SagaEventHandler(associationProperty = "pollId")
     public void handle(final PollProlongedEvent pollProlongedEvent){
-        if(scheduleToken != null){
+        if (scheduleTokenOptional.isPresent()) {
+            final ScheduleToken scheduleToken = scheduleTokenOptional.get();
             eventScheduler.cancelSchedule(scheduleToken);
         }
-        scheduleToken = eventScheduler.schedule(
+
+        final ScheduleToken scheduledToken = eventScheduler.schedule(
                 pollProlongedEvent.getNewPollDeadlineDate(),
                 new SagaDeadlineReachedEvent(pollProlongedEvent.getPollId())
         );
+
+        scheduleTokenOptional = Optional.of(scheduledToken);
     }
 }
