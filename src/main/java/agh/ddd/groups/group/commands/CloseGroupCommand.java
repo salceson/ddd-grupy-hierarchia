@@ -5,7 +5,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 
 public class CloseGroupCommand {
     @TargetAggregateIdentifier
-    private GroupId id;
+    private final GroupId id;
 
     public CloseGroupCommand(GroupId id) {
         this.id = id;

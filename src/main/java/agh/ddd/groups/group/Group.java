@@ -36,6 +36,7 @@ public class Group extends AbstractAnnotatedAggregateRoot {
     }
 
     public void close() {
+        //todo: state machine pattern
         if (state == CLOSED) {
             throw new GroupAlreadyClosedException(id);
         }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
+//todo: prototype?
 public class SplitGroupSaga extends AbstractAnnotatedSaga {
     private transient CommandGateway commandGateway;
     private transient EventScheduler eventScheduler;

@@ -2,6 +2,7 @@ package agh.ddd.groups.group.commands;
 
 import agh.ddd.groups.group.Member;
 import agh.ddd.groups.group.valueobjects.GroupId;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
 
@@ -31,6 +32,6 @@ public class SplitGroupCommand {
     }
 
     public Set<Member> getMovedMembers() {
-        return movedMemberSet;
+        return ImmutableSet.copyOf(movedMemberSet);
     }
 }
