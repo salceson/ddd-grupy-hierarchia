@@ -12,10 +12,12 @@ import java.util.Set;
 public class GroupCreatedEvent {
     private final GroupId groupId;
     private final GroupConfiguration configuration;
+    private final String name;
 
-    public GroupCreatedEvent(GroupId groupId,  GroupConfiguration configuration) {
+    public GroupCreatedEvent(GroupId groupId, GroupConfiguration configuration, String name) {
         this.groupId = groupId;
         this.configuration = configuration;
+        this.name = name;
     }
 
     public GroupId getGroupId() {
@@ -24,5 +26,9 @@ public class GroupCreatedEvent {
 
     public GroupConfiguration getConfiguration() {
         return configuration;
+    }
+
+    public String getName() {
+        return name;
     }
 }

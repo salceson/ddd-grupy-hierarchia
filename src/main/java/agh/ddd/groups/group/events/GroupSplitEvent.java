@@ -1,7 +1,14 @@
 package agh.ddd.groups.group.events;
 
-/**
- * Created by mikolaj on 08.01.15.
- */
+import agh.ddd.groups.group.valueobjects.GroupId;
+
 public class GroupSplitEvent {
+    private final GroupId oldGroupId;
+    private final GroupId newGroupId;
+
+    public GroupSplitEvent(GroupId oldGroupId, GroupId newGroupId) {
+
+        this.oldGroupId = oldGroupId;
+        this.newGroupId = newGroupId;
+    }
 }

@@ -2,15 +2,18 @@ package agh.ddd.groups.group.valueobjects;
 
 import java.util.UUID;
 
-/**
- * Created by mikolaj on 08.01.15.
- */
 public class GroupId {
-    private final UUID uuid = UUID.randomUUID();
+    private final UUID uuid;
 
-    public GroupId() {
+    public GroupId(UUID uuid) {
+        this.uuid = uuid;
     }
 
+    public static GroupId of(UUID uuid) {
+        return new GroupId(uuid);
+    }
+
+    //THOSE THREE METHODS HAS TO BE IMPLEMENTED
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

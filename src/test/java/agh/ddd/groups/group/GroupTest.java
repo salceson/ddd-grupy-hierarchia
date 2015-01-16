@@ -1,11 +1,8 @@
 package agh.ddd.groups.group;
 
-import agh.ddd.groups.group.commands.AddMemberToGroupCommand;
-import agh.ddd.groups.group.commands.CreateGroupCommand;
-import agh.ddd.groups.group.commands.RemoveMemberCommand;
-import agh.ddd.groups.group.events.GroupCreatedEvent;
-import agh.ddd.groups.group.events.MemberAddedEvent;
-import agh.ddd.groups.group.events.MemberRemovedEvent;
+import agh.ddd.groups.group.commands.*;
+import agh.ddd.groups.group.events.*;
+import agh.ddd.groups.group.exceptions.GroupAlreadyClosedException;
 import agh.ddd.groups.group.valueobjects.Email;
 import agh.ddd.groups.group.valueobjects.GroupConfiguration;
 import agh.ddd.groups.group.valueobjects.GroupId;
@@ -14,12 +11,13 @@ import org.axonframework.test.FixtureConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by mikolaj on 09.01.15.
- */
+import java.util.UUID;
+
 public class GroupTest {
     public static final int MAX_GROUP_SIZE = 3;
-    private FixtureConfiguration fixture;
+    private static final String GROUP_NAME = "Gotham Citizens";
+
+    private FixtureConfiguration<Group> fixture;
     private GroupId groupId;
     private GroupConfiguration configuration;
     private Member member;
@@ -32,7 +30,7 @@ public class GroupTest {
         fixture.registerAnnotatedCommandHandler(commandHandler);
 
         Email email = new Email("example@example.com");
-        groupId = new GroupId();
+        groupId = new GroupId(UUID.randomUUID());
         member = new Member(email, "Jan", "Kowalski");
         configuration = new GroupConfiguration(MAX_GROUP_SIZE);
     }
@@ -41,10 +39,39 @@ public class GroupTest {
     public void createGroupCommandShouldCreateNewGroup() {
         fixture.given()
                 .when(
-                        new CreateGroupCommand(groupId, configuration)
+                        new CreateGroupCommand(groupId, configuration, GROUP_NAME)
                 )
                 .expectEvents(
-                        new GroupCreatedEvent(groupId, configuration)
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME)
+                );
+    }
+
+    @Test
+    public void closeGroupCommandShouldCloseOpenedGroup() throws Exception {
+        fixture
+                .given(
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME)
+                )
+                .when(
+                        new CloseGroupCommand(groupId)
+                )
+                .expectEvents(
+                        new GroupClosedEvent(groupId)
+                );
+    }
+
+    @Test
+    public void closeGroupCommandShouldThrowExceptionWhenGroupIsAlreadyClosed() throws Exception {
+        fixture
+                .given(
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME),
+                        new GroupClosedEvent(groupId)
+                )
+                .when(
+                        new CloseGroupCommand(groupId)
+                )
+                .expectException(
+                        GroupAlreadyClosedException.class
                 );
     }
 
@@ -52,7 +79,7 @@ public class GroupTest {
     public void addMemberCommandShouldAddMember() {
         fixture
                 .given(
-                        new GroupCreatedEvent(groupId, configuration)
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME)
                 )
                 .when(
                         new AddMemberToGroupCommand(groupId, member)
@@ -66,7 +93,7 @@ public class GroupTest {
     public void removeMemberCommandShouldRemoveMember() {
         fixture
                 .given(
-                        new GroupCreatedEvent(groupId, configuration),
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME),
                         new MemberAddedEvent(groupId, member)
                 )
                 .when(
@@ -76,5 +103,7 @@ public class GroupTest {
                         new MemberRemovedEvent(groupId, member)
                 );
     }
+
+    
 
 }
