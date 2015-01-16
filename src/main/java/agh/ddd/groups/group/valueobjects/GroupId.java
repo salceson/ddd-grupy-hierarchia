@@ -1,14 +1,16 @@
 package agh.ddd.groups.group.valueobjects;
 
-public class GroupId {
-    private final String id;
+import java.util.UUID;
 
-    private GroupId(String id) {
-        this.id = id;
+public class GroupId {
+    private final UUID uuid;
+
+    public GroupId(UUID uuid) {
+        this.uuid = uuid;
     }
 
-    public static GroupId of(String groupId) {
-        return new GroupId(groupId);
+    public static GroupId of(UUID uuid) {
+        return new GroupId(uuid);
     }
 
     //THOSE THREE METHODS HAS TO BE IMPLEMENTED
@@ -17,20 +19,18 @@ public class GroupId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GroupId that = (GroupId) o;
+        GroupId groupId = (GroupId) o;
 
-        if (!id.equals(that.id)) return false;
-
-        return true;
+        return uuid.equals(groupId.uuid);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return uuid.hashCode();
     }
 
     @Override
     public String toString() {
-        return id;
+        return uuid.toString();
     }
 }

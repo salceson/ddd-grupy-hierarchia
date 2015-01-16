@@ -40,11 +40,11 @@ public class SplitGroupSaga extends AbstractAnnotatedSaga {
         associateWith("oldGroupId", oldGroupId.toString());
         associateWith("newGroupId", newGroupId.toString());
 
-        commandGateway.send(new CreateGroupCommand(newGroupId, newGroupName));
+        commandGateway.send(new CreateGroupCommand(newGroupId, event.getConfiguration(), newGroupName));
         commandGateway.send(new RemoveMembersCommand(oldGroupId, movedMembers));
     }
 
-    @SagaEventHandler(associationProperty = "id", keyName = "newGroupId")
+    @SagaEventHandler(associationProperty = "groupId", keyName = "newGroupId")
     public void handle(GroupCreatedEvent event) {
         commandGateway.send(new AddMembersCommand(newGroupId, movedMembers));
     }

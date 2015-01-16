@@ -1,55 +1,48 @@
 package agh.ddd.groups.group;
 
-import agh.ddd.groups.group.commands.CloseGroupCommand;
-import agh.ddd.groups.group.commands.CreateGroupCommand;
-import agh.ddd.groups.group.commands.SplitGroupCommand;
-import agh.ddd.groups.group.events.GroupClosedEvent;
-import agh.ddd.groups.group.events.GroupCreatedEvent;
-import agh.ddd.groups.group.events.GroupSplitEvent;
-import agh.ddd.groups.group.events.MembersAddedEvent;
+import agh.ddd.groups.group.commands.*;
+import agh.ddd.groups.group.events.*;
 import agh.ddd.groups.group.exceptions.GroupAlreadyClosedException;
+import agh.ddd.groups.group.valueobjects.Email;
+import agh.ddd.groups.group.valueobjects.GroupConfiguration;
 import agh.ddd.groups.group.valueobjects.GroupId;
-import org.axonframework.test.FixtureConfiguration;
 import org.axonframework.test.Fixtures;
-import org.axonframework.test.matchers.Matchers;
+import org.axonframework.test.FixtureConfiguration;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.axonframework.test.matchers.Matchers.equalTo;
-import static org.axonframework.test.matchers.Matchers.listWithAnyOf;
-
+import java.util.UUID;
 
 public class GroupTest {
-    private FixtureConfiguration<Group> fixture;
-
-    private static final String GROUP_ID = "1234";
+    public static final int MAX_GROUP_SIZE = 3;
     private static final String GROUP_NAME = "Gotham Citizens";
 
+    private FixtureConfiguration<Group> fixture;
     private GroupId groupId;
+    private GroupConfiguration configuration;
+    private Member member;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         fixture = Fixtures.newGivenWhenThenFixture(Group.class);
-
         GroupCommandHandler commandHandler = new GroupCommandHandler();
         commandHandler.setGroupRepository(fixture.getRepository());
         fixture.registerAnnotatedCommandHandler(commandHandler);
 
-        groupId = GroupId.of(GROUP_ID);
+        Email email = new Email("example@example.com");
+        groupId = new GroupId(UUID.randomUUID());
+        member = new Member(email, "Jan", "Kowalski");
+        configuration = new GroupConfiguration(MAX_GROUP_SIZE);
     }
 
     @Test
-    public void createGroupCommandShouldCreateNewGroup() throws Exception {
+    public void createGroupCommandShouldCreateNewGroup() {
         fixture.given()
                 .when(
-                        new CreateGroupCommand(GroupId.of(GROUP_ID), GROUP_NAME)
+                        new CreateGroupCommand(groupId, configuration, GROUP_NAME)
                 )
                 .expectEvents(
-                        new GroupCreatedEvent(GroupId.of(GROUP_ID), GROUP_NAME)
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME)
                 );
     }
 
@@ -57,7 +50,7 @@ public class GroupTest {
     public void closeGroupCommandShouldCloseOpenedGroup() throws Exception {
         fixture
                 .given(
-                        new GroupCreatedEvent(groupId, GROUP_NAME)
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME)
                 )
                 .when(
                         new CloseGroupCommand(groupId)
@@ -71,7 +64,7 @@ public class GroupTest {
     public void closeGroupCommandShouldThrowExceptionWhenGroupIsAlreadyClosed() throws Exception {
         fixture
                 .given(
-                        new GroupCreatedEvent(groupId, GROUP_NAME),
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME),
                         new GroupClosedEvent(groupId)
                 )
                 .when(
@@ -83,32 +76,34 @@ public class GroupTest {
     }
 
     @Test
-    @Ignore
-    public void splitGroupCommandShouldCreateNewGroupAndMoveSomeMembers() throws Exception {
-        //todo: should I test it this way or just test of saga would be enough?
-        String otherGroupName = "Gotham Watchers";
-        GroupId oldGroupId = GroupId.of("1234");
-        GroupId newGroupId = GroupId.of("9876");
-
-        Member alfred = new Member("alfred.pennyworth@gotham.com");
-        Member bruce = new Member("bruce@wayne.com");
-
-        Set<Member> allMembers = new HashSet<>();
-        allMembers.add(alfred);
-        allMembers.add(bruce);
-
-        Set<Member> movedMemberSet = new HashSet<>();
-        movedMemberSet.add(bruce);
-
+    public void addMemberCommandShouldAddMember() {
         fixture
                 .given(
-                        new GroupCreatedEvent(oldGroupId, GROUP_NAME),
-                        new MembersAddedEvent(oldGroupId, allMembers)
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME)
                 )
                 .when(
-                        new SplitGroupCommand(oldGroupId, newGroupId, otherGroupName, movedMemberSet)
+                        new AddMemberToGroupCommand(groupId, member)
                 )
-                .expectEventsMatching(
-                        listWithAnyOf(equalTo(new GroupSplitEvent(oldGroupId, newGroupId))));
+                .expectEvents(
+                        new MemberAddedEvent(groupId, member)
+                );
     }
+
+    @Test
+    public void removeMemberCommandShouldRemoveMember() {
+        fixture
+                .given(
+                        new GroupCreatedEvent(groupId, configuration, GROUP_NAME),
+                        new MemberAddedEvent(groupId, member)
+                )
+                .when(
+                        new RemoveMemberCommand(groupId, member)
+                )
+                .expectEvents (
+                        new MemberRemovedEvent(groupId, member)
+                );
+    }
+
+    
+
 }
