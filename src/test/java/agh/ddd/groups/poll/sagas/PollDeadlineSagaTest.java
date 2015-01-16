@@ -1,5 +1,6 @@
 package agh.ddd.groups.poll.sagas;
 
+import agh.ddd.groups.poll.commands.PollDeadlineReachedCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
 import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
@@ -31,8 +32,8 @@ public class PollDeadlineSagaTest {
         fixture
                 .givenAggregate(pollId)
                 .published(new PollCreatedEvent(pollId, content, pollDeadlineDate))
-                .whenTimeElapses(Duration.standardDays(14))
-                .expectScheduledEvent(pollDeadlineDate, new PollDeadlineReachedEvent(pollId));
+                .whenTimeElapses(Duration.standardDays(14).plus(Duration.standardSeconds(1)))
+                .expectDispatchedCommandsEqualTo(new PollDeadlineReachedCommand(pollId));
     }
 
     @Test
@@ -44,7 +45,7 @@ public class PollDeadlineSagaTest {
                         new PollFinishedEvent(pollId, 0)
                 )
                 .whenTimeElapses(Duration.standardDays(14))
-                .expectNoScheduledEvents();
+                .expectNoDispatchedCommands();
     }
 
     @Test
@@ -55,8 +56,8 @@ public class PollDeadlineSagaTest {
                         new PollCreatedEvent(pollId, content, pollDeadlineDate),
                         new PollProlongedEvent(pollId, prolongedDeadlineDate)
                 )
-                .whenTimeElapses(Duration.standardDays(14))
-                .expectScheduledEvent(prolongedDeadlineDate, new PollDeadlineReachedEvent(pollId));
+                .whenTimeElapses(Duration.standardDays(21))
+                .expectDispatchedCommandsEqualTo(new PollDeadlineReachedCommand(pollId));
     }
 
     @Test
@@ -69,7 +70,7 @@ public class PollDeadlineSagaTest {
                         new PollFinishedEvent(pollId, 0)
                 )
                 .whenTimeElapses(Duration.standardDays(14))
-                .expectNoScheduledEvents();
+                .expectNoDispatchedCommands();
     }
 
     @Test
@@ -82,7 +83,7 @@ public class PollDeadlineSagaTest {
                         new PollFinishedEvent(pollId, 0)
                 )
                 .whenTimeElapses(Duration.standardDays(21))
-                .expectNoScheduledEvents();
+                .expectNoDispatchedCommands();
     }
 
 }

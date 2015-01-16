@@ -5,7 +5,6 @@ import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.PollState;
 import agh.ddd.groups.poll.valueobjects.UserId;
 import com.google.common.base.Preconditions;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
@@ -67,6 +66,14 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
         apply(new MemberInterestedEvent(pollId, userId));
     }
 
+    public void deadlineReached(){
+        if(pollState != PollState.OPENED){
+            throw new IllegalStateException("Deadline can be reached only when poll is opened!");
+        }
+
+        apply(new PollDeadlineReachedEvent(pollId));
+    }
+
     @EventSourcingHandler
     public void onPollCreated(PollCreatedEvent event) {
         pollId = event.getPollId();
@@ -90,11 +97,8 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
         userVotes.add(event.getUserId());
     }
 
-    @EventHandler
+    @EventSourcingHandler
     public void onPollDeadlineReached(PollDeadlineReachedEvent event){
-        if(!pollId.equals(event.getPollId())){
-            return;
-        }
         pollState = PollState.DEADLINE_PASSED;
     }
 }
