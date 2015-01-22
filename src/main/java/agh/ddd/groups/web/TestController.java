@@ -1,6 +1,6 @@
 package agh.ddd.groups.web;
 
-import agh.ddd.groups.service.TestService;
+import agh.ddd.groups.service.PollService;
 import agh.ddd.groups.web.requestobjects.TestForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class TestController {
     @Autowired
-    private TestService testService;
+    private PollService pollService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String testApplication(Model model){
