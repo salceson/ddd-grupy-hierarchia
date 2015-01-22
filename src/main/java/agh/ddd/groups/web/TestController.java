@@ -3,9 +3,9 @@ package agh.ddd.groups.web;
 import agh.ddd.groups.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Michał Ciołczyk
@@ -16,8 +16,8 @@ public class TestController {
     private TestService testService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String testApplication(ModelAndView modelAndView){
-        modelAndView.addObject("test", "Test");
+    public String testApplication(Model model){
+        model.addAttribute("test", "Test");
         return "index";
     }
 }
