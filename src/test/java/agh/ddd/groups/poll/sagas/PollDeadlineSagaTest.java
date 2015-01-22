@@ -2,7 +2,6 @@ package agh.ddd.groups.poll.sagas;
 
 import agh.ddd.groups.poll.commands.PollDeadlineReachedCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
-import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.events.PollProlongedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
@@ -44,7 +43,7 @@ public class PollDeadlineSagaTest {
                         new PollCreatedEvent(pollId, content, pollDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
-                .whenTimeElapses(Duration.standardDays(14))
+                .whenTimeElapses(Duration.standardDays(14).plus(Duration.standardSeconds(1)))
                 .expectNoDispatchedCommands();
     }
 
@@ -56,7 +55,7 @@ public class PollDeadlineSagaTest {
                         new PollCreatedEvent(pollId, content, pollDeadlineDate),
                         new PollProlongedEvent(pollId, prolongedDeadlineDate)
                 )
-                .whenTimeElapses(Duration.standardDays(21))
+                .whenTimeElapses(Duration.standardDays(21).plus(Duration.standardSeconds(1)))
                 .expectDispatchedCommandsEqualTo(new PollDeadlineReachedCommand(pollId));
     }
 
@@ -69,7 +68,7 @@ public class PollDeadlineSagaTest {
                         new PollProlongedEvent(pollId, prolongedDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
-                .whenTimeElapses(Duration.standardDays(14))
+                .whenTimeElapses(Duration.standardDays(14).plus(Duration.standardSeconds(1)))
                 .expectNoDispatchedCommands();
     }
 
@@ -82,7 +81,7 @@ public class PollDeadlineSagaTest {
                         new PollProlongedEvent(pollId, prolongedDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
-                .whenTimeElapses(Duration.standardDays(21))
+                .whenTimeElapses(Duration.standardDays(21).plus(Duration.standardSeconds(1)))
                 .expectNoDispatchedCommands();
     }
 
