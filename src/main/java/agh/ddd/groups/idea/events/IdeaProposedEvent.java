@@ -3,11 +3,11 @@ package agh.ddd.groups.idea.events;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 
 public class IdeaProposedEvent {
-    private IdeaId id;
-    private int sectionId;
-    private String title;
-    private String description;
-    private String author;
+    private final IdeaId id;
+    private final int sectionId;
+    private final String title;
+    private final String description;
+    private final String author;
 
     public IdeaProposedEvent(IdeaId id, int sectionId, String title,
                              String description, String author) {

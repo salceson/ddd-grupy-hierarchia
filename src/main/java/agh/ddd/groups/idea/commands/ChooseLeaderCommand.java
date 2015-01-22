@@ -6,8 +6,8 @@ import agh.ddd.groups.idea.valueobject.IdeaId;
 
 public class ChooseLeaderCommand {
     @TargetAggregateIdentifier
-    private IdeaId ideaId;
-    private int leaderUserId;
+    private final IdeaId ideaId;
+    private final int leaderUserId;
 
     public ChooseLeaderCommand(IdeaId ideaId, int leaderUserId) {
         this.ideaId = ideaId;

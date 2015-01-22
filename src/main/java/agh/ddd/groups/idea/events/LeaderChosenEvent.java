@@ -3,8 +3,8 @@ package agh.ddd.groups.idea.events;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 
 public class LeaderChosenEvent {
-    private IdeaId id;
-    private int leaderUserId;
+    private final IdeaId id;
+    private final int leaderUserId;
 
     public LeaderChosenEvent(IdeaId id, int leaderUserId) {
         this.id = id;

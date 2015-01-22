@@ -6,7 +6,7 @@ import agh.ddd.groups.idea.valueobject.IdeaId;
 
 public class RejectIdeaCommand {
     @TargetAggregateIdentifier
-    private IdeaId id;
+    private final IdeaId id;
 
     public RejectIdeaCommand(IdeaId id) {
         this.id = id;

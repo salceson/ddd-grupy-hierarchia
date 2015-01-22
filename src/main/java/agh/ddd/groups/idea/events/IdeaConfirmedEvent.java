@@ -3,7 +3,7 @@ package agh.ddd.groups.idea.events;
 import agh.ddd.groups.idea.valueobject.IdeaId;
 
 public class IdeaConfirmedEvent {
-    private IdeaId id;
+    private final IdeaId id;
 
     public IdeaConfirmedEvent(IdeaId id) {
         this.id = id;
