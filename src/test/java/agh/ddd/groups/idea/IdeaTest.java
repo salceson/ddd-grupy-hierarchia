@@ -13,7 +13,6 @@ import agh.ddd.groups.idea.commands.RejectIdeaCommand;
 import agh.ddd.groups.idea.events.IdeaAcceptedEvent;
 import agh.ddd.groups.idea.events.IdeaConfirmedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
-import agh.ddd.groups.idea.events.IdeaPublishedEvent;
 import agh.ddd.groups.idea.events.IdeaRejectedEvent;
 import agh.ddd.groups.idea.events.LeaderChosenEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
@@ -59,7 +58,7 @@ public class IdeaTest {
 
 
     @Test
-    public void acceptIdeaCommandShouldGenerateIdeaAcceptedEventAndIdeaPublishedEvent() throws Exception {
+    public void acceptIdeaCommandShouldGenerateIdeaAcceptedEvent() throws Exception {
         fixture.given(
                 new IdeaProposedEvent(ideaId, sectionId, title, description, author)
         )
@@ -67,8 +66,7 @@ public class IdeaTest {
                         new AcceptIdeaCommand(ideaId)
                 )
                 .expectEvents(
-                        new IdeaAcceptedEvent(ideaId),
-                        new IdeaPublishedEvent(ideaId)
+                        new IdeaAcceptedEvent(ideaId)
                 );
     }
 

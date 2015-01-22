@@ -8,7 +8,6 @@ import org.axonframework.eventsourcing.annotation.EventSourcingHandler;
 import agh.ddd.groups.idea.events.IdeaAcceptedEvent;
 import agh.ddd.groups.idea.events.IdeaConfirmedEvent;
 import agh.ddd.groups.idea.events.IdeaProposedEvent;
-import agh.ddd.groups.idea.events.IdeaPublishedEvent;
 import agh.ddd.groups.idea.events.IdeaRejectedEvent;
 import agh.ddd.groups.idea.events.LeaderChosenEvent;
 import agh.ddd.groups.idea.valueobject.IdeaId;
@@ -87,9 +86,6 @@ public class Idea extends AbstractAnnotatedAggregateRoot {
     @EventSourcingHandler
     public void onIdeaAccepted(IdeaAcceptedEvent event) {
         this.state = IdeaState.ACCEPTED;
-
-        // legal?
-        apply(new IdeaPublishedEvent(this.id));
     }
 
     @EventSourcingHandler
