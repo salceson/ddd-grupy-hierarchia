@@ -97,4 +97,24 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     public void onPollDeadlineReached(PollDeadlineReachedEvent event){
         pollState = PollState.DEADLINE_PASSED;
     }
+
+    public PollId getPollId() {
+        return pollId;
+    }
+
+    public String getIdeaDescription() {
+        return ideaDescription;
+    }
+
+    public DateTime getPollDeadlineDate() {
+        return pollDeadlineDate;
+    }
+
+    public PollState getPollState() {
+        return pollState;
+    }
+
+    public Set<UserId> getUserVotes() {
+        return userVotes;
+    }
 }
