@@ -2,6 +2,7 @@ package agh.ddd.groups.poll.sagas;
 
 import agh.ddd.groups.poll.commands.PollDeadlineReachedCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
+import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.events.PollProlongedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
@@ -17,6 +18,8 @@ public class PollDeadlineSagaTest {
     private PollId pollId = PollId.of(5L);
     private String content = "Test poll";
     private DateTime pollDeadlineDate, prolongedDeadlineDate;
+    private Duration elapsedTimeToDeadline;
+    private Duration elapsedTimeToProlongedDeadline;
 
     @Before
     public void setUp() throws Exception {
@@ -24,6 +27,8 @@ public class PollDeadlineSagaTest {
         DateTime now = DateTime.now();
         pollDeadlineDate = now.plusDays(14);
         prolongedDeadlineDate = now.plusDays(21);
+        elapsedTimeToDeadline = Duration.standardDays(14).plus(Duration.standardSeconds(1));
+        elapsedTimeToProlongedDeadline = Duration.standardDays(21).plus(Duration.standardSeconds(1));
     }
 
     @Test
@@ -31,7 +36,7 @@ public class PollDeadlineSagaTest {
         fixture
                 .givenAggregate(pollId)
                 .published(new PollCreatedEvent(pollId, content, pollDeadlineDate))
-                .whenTimeElapses(Duration.standardDays(14).plus(Duration.standardSeconds(1)))
+                .whenTimeElapses(elapsedTimeToDeadline)
                 .expectDispatchedCommandsEqualTo(new PollDeadlineReachedCommand(pollId));
     }
 
@@ -43,7 +48,7 @@ public class PollDeadlineSagaTest {
                         new PollCreatedEvent(pollId, content, pollDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
-                .whenTimeElapses(Duration.standardDays(14).plus(Duration.standardSeconds(1)))
+                .whenTimeElapses(elapsedTimeToDeadline)
                 .expectNoDispatchedCommands();
     }
 
@@ -55,7 +60,7 @@ public class PollDeadlineSagaTest {
                         new PollCreatedEvent(pollId, content, pollDeadlineDate),
                         new PollProlongedEvent(pollId, prolongedDeadlineDate)
                 )
-                .whenTimeElapses(Duration.standardDays(21).plus(Duration.standardSeconds(1)))
+                .whenTimeElapses(elapsedTimeToProlongedDeadline)
                 .expectDispatchedCommandsEqualTo(new PollDeadlineReachedCommand(pollId));
     }
 
@@ -68,7 +73,7 @@ public class PollDeadlineSagaTest {
                         new PollProlongedEvent(pollId, prolongedDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
-                .whenTimeElapses(Duration.standardDays(14).plus(Duration.standardSeconds(1)))
+                .whenTimeElapses(elapsedTimeToDeadline)
                 .expectNoDispatchedCommands();
     }
 
@@ -81,7 +86,7 @@ public class PollDeadlineSagaTest {
                         new PollProlongedEvent(pollId, prolongedDeadlineDate),
                         new PollFinishedEvent(pollId, 0)
                 )
-                .whenTimeElapses(Duration.standardDays(21).plus(Duration.standardSeconds(1)))
+                .whenTimeElapses(elapsedTimeToProlongedDeadline)
                 .expectNoDispatchedCommands();
     }
 

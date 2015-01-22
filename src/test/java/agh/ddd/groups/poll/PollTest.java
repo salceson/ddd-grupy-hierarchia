@@ -88,7 +88,7 @@ public class PollTest {
 
     @Test
     public void prolongPollCommandShouldProlongPoll() throws Exception {
-        final DateTime newDeadlineDate = new DateTime().plusDays(1);
+        final DateTime newDeadlineDate = DateTime.now().plusDays(1);
 
         fixture
                 .given(

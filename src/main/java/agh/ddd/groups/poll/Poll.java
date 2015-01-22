@@ -19,19 +19,19 @@ import java.util.Set;
 public class Poll extends AbstractAnnotatedAggregateRoot{
     @AggregateIdentifier
     private PollId pollId;
-    private String content; //The idea is described here.
+    private String ideaDescription;
     private PollState pollState;
     private DateTime pollDeadlineDate;
     private Set<UserId> userVotes = new HashSet<UserId>();
 
     private Poll() {}
 
-    public Poll(PollId pollId, String content, DateTime pollDeadlineDate){
+    public Poll(PollId pollId, String ideaDescription, DateTime pollDeadlineDate){
         Preconditions.checkNotNull(pollId);
-        Preconditions.checkNotNull(content);
+        Preconditions.checkNotNull(ideaDescription);
         Preconditions.checkNotNull(pollDeadlineDate);
         Preconditions.checkArgument(!pollDeadlineDate.isBeforeNow());
-        apply(new PollCreatedEvent(pollId, content, pollDeadlineDate));
+        apply(new PollCreatedEvent(pollId, ideaDescription, pollDeadlineDate));
     }
 
     public void prolong(DateTime newDeadlineDate, UserId userId) {
@@ -73,7 +73,7 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     @EventSourcingHandler
     public void onPollCreated(PollCreatedEvent event) {
         pollId = event.getPollId();
-        content = event.getContent();
+        ideaDescription = event.getContent();
         pollDeadlineDate = event.getPollDeadlineDate();
         pollState = PollState.OPENED;
     }
@@ -96,5 +96,25 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     @EventSourcingHandler
     public void onPollDeadlineReached(PollDeadlineReachedEvent event){
         pollState = PollState.DEADLINE_PASSED;
+    }
+
+    public PollId getPollId() {
+        return pollId;
+    }
+
+    public String getIdeaDescription() {
+        return ideaDescription;
+    }
+
+    public DateTime getPollDeadlineDate() {
+        return pollDeadlineDate;
+    }
+
+    public PollState getPollState() {
+        return pollState;
+    }
+
+    public Set<UserId> getUserVotes() {
+        return userVotes;
     }
 }
