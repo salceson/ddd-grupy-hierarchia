@@ -16,9 +16,7 @@ public class IdeaCommandHandler {
 
     @CommandHandler
     public void handleProposeIdeaCommand(ProposeIdeaCommand command) {
-        Idea idea = IdeaFactory.create(command.getId(), command.getSectionId(),
-                command.getTitle(), command.getDescription(),
-                command.getAuthor());
+        Idea idea = IdeaFactory.create(command);
         ideaRepository.add(idea);
     }
 
