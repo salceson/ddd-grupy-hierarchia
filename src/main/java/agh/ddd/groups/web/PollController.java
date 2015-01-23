@@ -48,7 +48,7 @@ public class PollController {
             return "redirect:/poll/new";
         }
 
-        final PollId pollId = PollId.of(15L);
+        final PollId pollId = PollId.of(16L);
 
         pollService.addPoll(pollId, poll.getContent(), poll.getDeadline());
 

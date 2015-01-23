@@ -7,6 +7,8 @@ import agh.ddd.groups.web.requestobjects.PollForm;
 import com.google.common.base.Optional;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.repository.Repository;
+import org.axonframework.unitofwork.DefaultUnitOfWork;
+import org.axonframework.unitofwork.UnitOfWork;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,9 +35,14 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public Optional<PollForm> getPoll(PollId pollId) {
-        final Poll poll =  repository.load(pollId);
+        final UnitOfWork unitOfWork = DefaultUnitOfWork.startAndGet();
+        Poll poll = null;
 
-        if(poll == null) {
+        try {
+            poll = repository.load(pollId);
+            unitOfWork.commit();
+        } catch (Exception e) {
+            unitOfWork.rollback(e);
             return Optional.absent();
         }
 
