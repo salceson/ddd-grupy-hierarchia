@@ -73,7 +73,7 @@ public class Poll extends AbstractAnnotatedAggregateRoot{
     @EventSourcingHandler
     public void onPollCreated(PollCreatedEvent event) {
         pollId = event.getPollId();
-        ideaDescription = event.getContent();
+        ideaDescription = event.getIdeaDescription();
         pollDeadlineDate = event.getPollDeadlineDate();
         pollState = PollState.OPENED;
     }
