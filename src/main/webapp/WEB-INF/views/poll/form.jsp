@@ -20,12 +20,12 @@
       </spring:bind>
       <spring:bind path="deadline">
         <div>
-          <form:label path="deadline">Deadline (YYYY-MM-DD HH:MM:SS): </form:label>
-          <form:input path="deadline"/>
+          <form:label path="deadline">Deadline (YYYY-MM-DD HH:MM): </form:label>
+          <form:input path="deadline" type="datetime"/>
         </div>
       </spring:bind>
       <div>
-        <button type="submit">Wyślij</button>
+        <button type="submit">Create</button>
       </div>
     </form:form>
   </div>
