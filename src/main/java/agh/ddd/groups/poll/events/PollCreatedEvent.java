@@ -8,12 +8,12 @@ import org.joda.time.DateTime;
  */
 public class PollCreatedEvent {
     private final PollId pollId;
-    private final String content;
+    private final String ideaDescription;
     private final DateTime pollDeadlineDate;
 
-    public PollCreatedEvent(PollId pollId, String content, DateTime pollDeadlineDate) {
+    public PollCreatedEvent(PollId pollId, String ideaDescription, DateTime pollDeadlineDate) {
         this.pollId = pollId;
-        this.content = content;
+        this.ideaDescription = ideaDescription;
         this.pollDeadlineDate = pollDeadlineDate;
     }
 
@@ -21,8 +21,8 @@ public class PollCreatedEvent {
         return pollId;
     }
 
-    public String getContent() {
-        return content;
+    public String getIdeaDescription() {
+        return ideaDescription;
     }
 
     public DateTime getPollDeadlineDate() {
