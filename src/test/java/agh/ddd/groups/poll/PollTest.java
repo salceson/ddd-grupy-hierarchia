@@ -4,7 +4,11 @@ import agh.ddd.groups.poll.commands.CreatePollCommand;
 import agh.ddd.groups.poll.commands.FinishPollCommand;
 import agh.ddd.groups.poll.commands.ProlongPollCommand;
 import agh.ddd.groups.poll.commands.VoteIdeaCommand;
-import agh.ddd.groups.poll.events.*;
+import agh.ddd.groups.poll.events.MemberInterestedEvent;
+import agh.ddd.groups.poll.events.PollCreatedEvent;
+import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
+import agh.ddd.groups.poll.events.PollFinishedEvent;
+import agh.ddd.groups.poll.events.PollProlongedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
 import agh.ddd.groups.poll.valueobjects.UserId;
 import org.axonframework.test.FixtureConfiguration;
@@ -13,10 +17,12 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
+
 public class PollTest {
     private FixtureConfiguration fixture;
 
-    private PollId pollId = PollId.of(13L);
+    private PollId pollId = PollId.of(UUID.randomUUID());
     private String pollContent = "Test poll";
     private UserId userId = UserId.of(7L);
     private DateTime pollDeadlineDate = DateTime.now().plusDays(14);

@@ -2,7 +2,6 @@ package agh.ddd.groups.poll.sagas;
 
 import agh.ddd.groups.poll.commands.PollDeadlineReachedCommand;
 import agh.ddd.groups.poll.events.PollCreatedEvent;
-import agh.ddd.groups.poll.events.PollDeadlineReachedEvent;
 import agh.ddd.groups.poll.events.PollFinishedEvent;
 import agh.ddd.groups.poll.events.PollProlongedEvent;
 import agh.ddd.groups.poll.valueobjects.PollId;
@@ -12,10 +11,12 @@ import org.joda.time.Duration;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.UUID;
+
 public class PollDeadlineSagaTest {
     private AnnotatedSagaTestFixture fixture;
 
-    private PollId pollId = PollId.of(5L);
+    private PollId pollId = PollId.of(UUID.randomUUID());
     private String content = "Test poll";
     private DateTime pollDeadlineDate, prolongedDeadlineDate;
     private Duration elapsedTimeToDeadline;
