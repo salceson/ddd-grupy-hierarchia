@@ -1,16 +1,18 @@
 package agh.ddd.groups.poll.valueobjects;
 
+import java.util.UUID;
+
 /**
  * @author Michał Ciołczyk
  */
 public class PollId {
-    private final long id;
+    private final UUID id;
 
-    private PollId(long id) {
+    private PollId(UUID id) {
         this.id = id;
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -28,7 +30,7 @@ public class PollId {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return id.hashCode();
     }
 
     @Override
@@ -38,7 +40,7 @@ public class PollId {
                 '}';
     }
 
-    public static PollId of(long id){
+    public static PollId of(UUID id){
         return new PollId(id);
     }
 }

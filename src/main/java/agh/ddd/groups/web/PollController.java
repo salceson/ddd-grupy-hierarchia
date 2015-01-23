@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.UUID;
+
 /**
  * @author Michal Janczykowski
  */
@@ -24,8 +26,8 @@ public class PollController {
     private PollService pollService;
 
     @RequestMapping(value = "/poll/{id}", method = RequestMethod.GET)
-    public String testForm(Model model, @PathVariable("id") long id){
-        final PollId pollId = PollId.of(id);
+    public String testForm(Model model, @PathVariable("id") String id){
+        final PollId pollId = PollId.of(UUID.fromString(id));
         final Optional<PollForm> pollFormOptional = pollService.getPoll(pollId);
 
         if(!pollFormOptional.isPresent()) {
@@ -43,16 +45,17 @@ public class PollController {
     }
 
     @RequestMapping(value = "/poll/add", method = RequestMethod.POST)
-    public @ResponseBody String handleTestForm(@ModelAttribute PollForm poll, Model model, BindingResult bindingResult){
+    public String handleTestForm(@ModelAttribute PollForm poll, Model model, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return "redirect:/poll/new";
         }
 
-        final PollId pollId = PollId.of(16L);
+        final UUID uuid = UUID.randomUUID();
+        final PollId pollId = PollId.of(uuid);
 
         pollService.addPoll(pollId, poll.getContent(), poll.getDeadline());
 
-        return "Request sent";
+        return "redirect:/poll/" + uuid.toString();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
